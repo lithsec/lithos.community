@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Getting started — Lithos</title>
+  <meta name="description" content="How to run live translation for your community with Lithos: your first Sunday, an always-on server, every room in the building, and what to do when something's wrong." />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --basalt: #1e1c1a; --basalt-2: #2c2926; --face: #3f3933;
+      --limestone: #e8e0d0; --dust: #a89f8e; --dust-2: #8f8577;
+      --gilt: #c9a227; --gilt-dim: #a98a2f; --edge: #3a352f;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: dark; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body { margin: 0; background: linear-gradient(170deg, var(--basalt-2), var(--basalt) 45%); color: var(--limestone); font: 17px/1.7 var(--serif); }
+    a { color: var(--gilt); text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--gilt); outline-offset: 3px; }
+
+    header.top { border-bottom: 1px solid var(--edge); }
+    .top-in { max-width: 1060px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+    .top-in a.home { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--limestone); font-weight: 600; letter-spacing: .2em; font-size: .95rem; }
+    .top-in .crumb { font-family: var(--sans); color: var(--dust-2); font-size: .85rem; }
+
+    .page { max-width: 1060px; margin: 0 auto; padding: 40px 24px 90px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+    @media (max-width: 800px) { .page { grid-template-columns: 1fr; gap: 8px; } }
+
+    nav.toc { position: sticky; top: 24px; align-self: start; font-family: var(--sans); font-size: .86rem; }
+    @media (max-width: 800px) { nav.toc { position: static; border: 1px solid var(--edge); border-radius: 12px; padding: 14px 16px; margin-bottom: 26px; } }
+    nav.toc .toc-title { letter-spacing: .16em; text-transform: uppercase; font-size: .7rem; color: var(--dust-2); margin-bottom: 10px; }
+    nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+    nav.toc a { text-decoration: none; color: var(--dust); }
+    nav.toc a:hover { color: var(--gilt); }
+    nav.toc .sub { padding-left: 14px; font-size: .8rem; }
+
+    main h1 { font-size: clamp(1.9rem, 4.5vw, 2.5rem); line-height: 1.15; margin: 0 0 10px; font-weight: 600; text-wrap: balance; }
+    main .lede { color: var(--dust); max-width: 62ch; margin: 0 0 8px; }
+    main .lede b { color: var(--limestone); }
+
+    section.rung { border-top: 1px solid var(--edge); margin-top: 44px; padding-top: 36px; }
+    .rung-eyebrow { font-family: var(--sans); font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gilt); margin-bottom: 8px; }
+    section.rung h2 { font-size: 1.5rem; margin: 0 0 14px; font-weight: 600; }
+    section.rung h3 { font-size: 1.05rem; margin: 28px 0 8px; font-weight: 600; color: var(--limestone); }
+    section.rung p { max-width: 64ch; margin: 0 0 14px; }
+    section.rung p.quiet, section.rung li.quiet { color: var(--dust); }
+    .stop-here { font-family: var(--sans); font-size: .84rem; color: var(--dust-2); border-left: 3px solid var(--gilt-dim); padding: 6px 14px; margin-top: 26px; font-style: normal; }
+
+    ol.steps { margin: 0; padding-left: 1.3em; display: grid; gap: 12px; max-width: 64ch; }
+    ol.steps li::marker { color: var(--gilt); font-weight: 600; }
+    ol.steps b { color: var(--limestone); }
+    ul.plain { margin: 0 0 14px; padding-left: 1.15em; display: grid; gap: 10px; max-width: 64ch; }
+    ul.plain li::marker { color: var(--gilt); }
+
+    figure.shot { margin: 22px 0; }
+    figure.shot img { max-width: 100%; width: 420px; border: 1px solid var(--edge); border-radius: 12px; display: block; }
+    figure.shot figcaption { font-family: var(--sans); font-size: .78rem; color: var(--dust-2); margin-top: 8px; }
+    .shots-row { display: flex; gap: 22px; flex-wrap: wrap; }
+    .shots-row figure.shot img { width: 340px; }
+
+    pre { background: color-mix(in srgb, var(--face) 36%, transparent); border: 1px solid var(--edge); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: .82rem; line-height: 1.6; color: var(--limestone); max-width: 64ch; }
+    pre .c { color: var(--dust-2); }
+    code { font-family: var(--mono); font-size: .85em; color: var(--gilt); }
+    pre code { color: inherit; font-size: inherit; }
+
+    .faq { display: grid; gap: 10px; max-width: 66ch; }
+    .faq details { border: 1px solid var(--edge); border-radius: 10px; background: color-mix(in srgb, var(--face) 26%, transparent); }
+    .faq summary { cursor: pointer; padding: 13px 16px; font-family: var(--sans); font-size: .95rem; color: var(--limestone); }
+    .faq summary:hover { color: var(--gilt); }
+    .faq .a { padding: 0 16px 14px; font-family: var(--sans); font-size: .9rem; color: var(--dust); line-height: 1.65; }
+    .faq .a b { color: var(--limestone); }
+    .faq .a code { color: var(--gilt); }
+
+    .contact { border: 1px solid var(--gilt-dim); border-radius: 12px; padding: 22px 26px; margin-top: 30px; max-width: 66ch; }
+    .contact p { font-family: var(--sans); font-size: .93rem; color: var(--dust); margin: 0; }
+    .contact b { color: var(--gilt); }
+
+    footer { border-top: 1px solid var(--edge); padding: 28px 0 44px; text-align: center; font-family: var(--sans); font-size: .8rem; color: var(--dust-2); }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-in">
+      <a class="home" href="../">
+        <svg width="26" height="26" viewBox="0 0 120 120" aria-hidden="true"><polygon points="60,16 87,24.8 103.8,47.8 103.8,76.2 87,99.2 60,108 33,99.2 16.2,76.2 16.2,47.8 33,24.8" fill="#2e2b28" stroke="#c9a227" stroke-width="6" stroke-linejoin="round"/><rect x="42" y="42" width="36" height="8" rx="4" fill="#c9a227"/><rect x="42" y="58" width="36" height="8" rx="4" fill="#e8e0d0"/><rect x="42" y="74" width="36" height="8" rx="4" fill="#8f8577"/></svg>
+        LITHOS
+      </a>
+      <span class="crumb">/ getting started</span>
+    </div>
+  </header>
+
+  <div class="page">
+    <nav class="toc" aria-label="Contents">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><a href="#first-sunday">1 · Your first Sunday</a></li>
+        <li><a href="#always-on">2 · A box that's always on</a></li>
+        <li><a href="#every-room">3 · Every room in the building</a></li>
+        <li class="sub"><a href="#classes">Classes &amp; groups</a></li>
+        <li class="sub"><a href="#room-audio">Room speakers &amp; boxes</a></li>
+        <li class="sub"><a href="#speak-back">The congregation speaks</a></li>
+        <li><a href="#trouble">4 · When something's wrong</a></li>
+      </ol>
+    </nav>
+
+    <main>
+      <h1>Getting started</h1>
+      <p class="lede">Everything here runs on <b>your</b> hardware and <b>your</b> WiFi.
+      Start at the top — the first section is a complete Sunday, and every section
+      after it is optional. You can stop at any rung of the ladder.</p>
+
+      <!-- ================= RUNG 1 ================= -->
+      <section class="rung" id="first-sunday">
+        <div class="rung-eyebrow">Rung 1 · A laptop and a mic</div>
+        <h2>Your first Sunday</h2>
+        <p>One laptop at the sound desk. The congregation uses their own phones.
+        Total setup time is about ten minutes, most of it printing the flyer.</p>
+
+        <ol class="steps">
+          <li><b>Download and open the app.</b> <span id="dlInline">The first public
+            release is almost ready — until then, this section describes what it will
+            look like.</span> macOS and Windows installers are signed, so there's
+            nothing to click through.</li>
+          <li><b>Pick an operator PIN</b> on the first-run screen. This one PIN guards
+            the staff pages — operator, presenter, playout — so make it 6+ characters
+            that aren't a year or <code>1234</code> (the app refuses weak ones).</li>
+          <li><b>Paste an API key</b> — translation is done by an AI provider using
+            <em>your own</em> account. Google Gemini
+            (<code>aistudio.google.com/apikey</code>) is the recommended one — it
+            covers 70+ languages. Paste it on the <b>Operator</b> tab → <b>Save</b> →
+            <b>Test</b>; the test opens a real session so you know it works before
+            Sunday.</li>
+          <li><b>Check your languages.</b> English, Spanish, French, and Chinese are
+            on by default; add or remove from the same tab. Each enabled language is
+            one live translation stream, billed per minute by your provider while the
+            service runs — the cost meter on the Operator tab shows the running
+            estimate.</li>
+          <li><b>Print the flyer.</b> The Join QR card holds your guest WiFi name and
+            password (they become a join-the-WiFi QR on the flyer) and a
+            <b>🖨 Print flyer</b> button. People scan step 1 to hop on the WiFi and
+            step 2 to open the page — nothing to install.</li>
+          <li><b>Go live.</b> Switch to the <b>Presenter</b> tab, pick the microphone,
+            tap <b>● Go live</b>, and speak. Phones show live captions immediately; a
+            tap adds audio for earbuds. If you have a projector, the
+            <b>This computer</b> tab opens a full-screen caption wall on it.</li>
+        </ol>
+
+        <figure class="shot">
+          <img src="images/setup.png" alt="The first-run setup screen: choose an operator PIN and optionally paste Gemini or OpenAI API keys." loading="lazy" />
+          <figcaption>First run: pick the PIN, optionally paste keys right here.</figcaption>
+        </figure>
+        <div class="shots-row">
+          <figure class="shot">
+            <img src="images/operator.png" alt="The Operator tab: start button, getting-started card with API keys, the language list, and the join QR with a printable flyer." loading="lazy" />
+            <figcaption>The Operator tab — keys, languages, and the flyer.</figcaption>
+          </figure>
+          <figure class="shot">
+            <img src="images/presenter.png" alt="The Presenter tab: scope picker, microphone picker, the Go live button, and the Participants moderation panel." loading="lazy" />
+            <figcaption>The Presenter tab — pick a mic, go live.</figcaption>
+          </figure>
+        </div>
+
+        <p class="stop-here">You could stop here. One speaker, every language, phones
+        and a projector — that's a whole Sunday.</p>
+      </section>
+
+      <!-- ================= RUNG 2 ================= -->
+      <section class="rung" id="always-on">
+        <div class="rung-eyebrow">Rung 2 · No laptop to remember</div>
+        <h2>A box that's always on</h2>
+        <p>Instead of someone's laptop, run Lithos headless on a mini-PC, a spare
+        machine in a closet, or a Raspberry Pi — everyone (including the speaker)
+        connects from a browser. It's the same product with no screen attached.</p>
+
+        <p>With Docker installed, it's a two-line file and one command:</p>
+<pre><code><span class="c"># .env — an API key and the staff PIN is all it takes</span>
+GEMINI_API_KEY=your-key-here
+LT_OPERATOR_PIN=hosanna-42</code></pre>
+<pre><code>./run.sh   <span class="c"># finds your LAN address and starts the server</span></code></pre>
+        <p class="quiet">The log prints two links: <code>http://&lt;your-ip&gt;:8080</code>
+        for the congregation, and <code>https://&lt;your-ip&gt;:8443</code> for staff
+        pages (the operator console and the presenter's mic need a secure page —
+        staff tap through a one-time certificate notice; the congregation never
+        sees one).</p>
+
+        <h3>Things worth knowing</h3>
+        <ul class="plain">
+          <li class="quiet"><b>Everything you set from the operator page persists</b> —
+            languages, groups, room speakers, WiFi for the flyer — in a Docker volume
+            that survives updates and restarts. (Avoid <code>docker compose down -v</code>;
+            the <code>-v</code> deletes that volume.)</li>
+          <li class="quiet"><b>The speaker presents from a phone:</b> open
+            <code>/presenter</code> on the staff link, PIN in, tap Go live. A wired
+            headset mic beats holding the phone.</li>
+          <li class="quiet"><b>The projector is just a browser:</b> open
+            <code>/projector</code> on any TV or PC and full-screen it.</li>
+          <li class="quiet"><b>Prefer a file to a web form?</b> Drop a
+            <code>config.json</code> next to the compose file for languages and groups;
+            operator-page edits still win.</li>
+        </ul>
+
+        <p class="stop-here">You could stop here. A box in a closet, phones in the
+        pews, nobody owns a laptop cable anymore.</p>
+      </section>
+
+      <!-- ================= RUNG 3 ================= -->
+      <section class="rung" id="every-room">
+        <div class="rung-eyebrow">Rung 3 · The whole building</div>
+        <h2>Every room in the building</h2>
+
+        <h3 id="classes">Classes &amp; breakout groups</h3>
+        <p>Each class gets its own translation room: its own languages, its own
+        speaker, its own audience. On the operator page, <b>Groups → + Add group</b>
+        (e.g. <em>EQ</em>, <em>Relief Society</em>, <em>Sunday School</em>). The
+        teacher opens the presenter page, picks their class in <b>Present to</b>, and
+        taps Go live — that starts the class; nothing bills until then.</p>
+        <p class="quiet">People can join a class <em>before</em> it starts — the picker
+        marks it “starts soon,” their phone waits quietly, and the moment the teacher
+        goes live everyone connects at once. The teacher even sees how many phones are
+        waiting.</p>
+        <figure class="shot">
+          <img src="images/listener-picker.png" alt="The phone page's group picker: preferred-language chips, then buttons for EQ, Relief Society and Sunday School marked 'starts soon', plus the Main service." loading="lazy" />
+          <figcaption>What the congregation sees: pick a room, pick a language.</figcaption>
+        </figure>
+
+        <h3 id="room-audio">Room speakers &amp; output boxes</h3>
+        <ul class="plain">
+          <li class="quiet"><b>A speaker in a room:</b> the operator page's
+            <b>Room speakers</b> card routes one language per room to the app
+            computer's own output — or to a named <em>playout box</em>.</li>
+          <li class="quiet"><b>A playout box</b> is a Raspberry Pi (or a second laptop
+            in Playout mode) that plays one room's language out of its audio jack —
+            into a powered speaker, a mixer, or an FM transmitter. Boxes register
+            themselves and are assigned a room + language from the
+            <code>/playout</code> page.</li>
+          <li class="quiet"><b>A room mic</b> works the same way in reverse: a box (or
+            second laptop) can contribute a microphone that the presenter page lists
+            and controls — it streams only while the presenter is live.</li>
+        </ul>
+
+        <h3 id="speak-back">The congregation speaks back</h3>
+        <p>Any phone can request the mic and be translated for everyone — one voice at
+        a time. The presenter's <b>Participants</b> panel is the switchboard: turn on
+        <b>Allow congregation speaking</b>, then grant requests by hand, or flip
+        <b>Let anyone interject</b> for a hands-free discussion. Exactly one voice
+        ever feeds translation, so a teacher on a mic and participants on phones
+        never garble each other. Attendees can also spin up their own temporary
+        PIN-protected group for a hallway conversation — it disappears when they're
+        done.</p>
+
+        <p class="stop-here">This is the whole vision: the main hall, every classroom,
+        and the hallway in between — each hearing in its own language.</p>
+      </section>
+
+      <!-- ================= RUNG 4 ================= -->
+      <section class="rung" id="trouble">
+        <div class="rung-eyebrow">Rung 4 · The honest FAQ</div>
+        <h2>When something's wrong</h2>
+        <div class="faq">
+          <details>
+            <summary>Phones can't open the page</summary>
+            <div class="a">Ninety percent of the time: <b>the phone isn't on the same
+            WiFi</b> as the Lithos machine (it wandered onto cellular or a different
+            network — the flyer's WiFi QR exists for exactly this). If phones are on
+            the right network and it still fails, the router may have <b>client/AP
+            isolation</b> enabled (common on guest networks) — turn it off or use a
+            different SSID. Running in Docker? Set <code>LT_PUBLIC_HOST</code> to the
+            host machine's LAN address so the printed URL and QR point somewhere
+            phones can reach (<code>./run.sh</code> does this automatically).</div>
+          </details>
+          <details>
+            <summary>The staff page shows a certificate warning</summary>
+            <div class="a">Expected, once per device. Staff pages use HTTPS with a
+            certificate the server makes for itself, because browsers only allow
+            microphone access and key entry on a secure page. Tap through the one-time
+            notice. The congregation's page is plain HTTP on purpose — they never see
+            a warning.</div>
+          </details>
+          <details>
+            <summary>It refused my PIN</summary>
+            <div class="a">The PIN guards everything staff can do, so weak ones
+            (<code>1234</code>, a year, a short word) are rejected. Pick 6+ characters
+            that aren't guessable — a short phrase like <code>hosanna-42</code> works
+            well and types easily on a phone.</div>
+          </details>
+          <details>
+            <summary>What does it actually cost?</summary>
+            <div class="a">Lithos itself is <b>free for churches, schools, and
+            nonprofits</b>. Translation runs on your own AI-provider account (Gemini or
+            OpenAI), billed by them per minute, <b>per live language</b> — four
+            languages for a one-hour service is four hours of translation time. Rooms
+            multiply it while they're running; idle rooms and phones waiting in a
+            not-yet-started class cost nothing. The operator page's meter shows a
+            running estimate, and stopping the service stops the spend.</div>
+          </details>
+          <details>
+            <summary>Where do my settings live? Are recordings kept?</summary>
+            <div class="a">Settings stay on your machine — the desktop app keeps them
+            in its own app folder; the server keeps them in its data volume. Nothing
+            about your service goes to us. Transcript saving is <b>off by default</b>;
+            when you turn it on, transcripts are text files on your own machine.</div>
+          </details>
+        </div>
+
+        <div class="contact">
+          <p>Still stuck? Write to <b><a href="mailto:support@lithos.community">support@lithos.community</a></b>
+          — include what you saw on screen and whether you're on the desktop app or
+          the server. A photo of the error beats a description of it.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>Lithos · translate.lithos.community · © 2026</footer>
+
+  <script>
+    // If a release is published, the "almost ready" line in step 1 becomes a
+    // real download link. Same call as the landing page; drafts stay invisible.
+    fetch('https://api.github.com/repos/lithsec/lithos.community/releases/latest')
+      .then(function (r) { return r.ok ? r.json() : null })
+      .then(function (rel) {
+        if (!rel || !rel.assets || !rel.assets.length) return
+        var el = document.getElementById('dlInline')
+        if (el) el.innerHTML = 'Get it from the <a href="../#download">download section</a> (' + (rel.tag_name || 'latest') + ').'
+      })
+      .catch(function () {})
+  </script>
+</body>
+</html>
