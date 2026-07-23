@@ -187,6 +187,19 @@ LT_OPERATOR_PIN=hosanna-42</code></pre>
         staff tap through a one-time certificate notice; the congregation never
         sees one).</p>
 
+        <h3>No Docker? Bare Node works too</h3>
+        <p class="quiet">On a fresh Ubuntu box (verified on Ubuntu 24.04), install
+        Node 22, then install and run from the project folder:</p>
+<pre><code><span class="c"># Node 22 via NodeSource — curl + ca-certificates are the only prerequisites</span>
+sudo apt-get update
+sudo apt-get install -y curl ca-certificates
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
+sudo apt-get install -y nodejs</code></pre>
+<pre><code><span class="c"># Skips the ~100 MB desktop binary the server never uses — kind to a Pi</span>
+ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install
+
+GEMINI_API_KEY=your-key-here LT_OPERATOR_PIN=hosanna-42 npm run server</code></pre>
+
         <h3>Things worth knowing</h3>
         <ul class="plain">
           <li class="quiet"><b>Everything you set from the operator page persists</b> —
